@@ -1,0 +1,312 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Plumbing</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/all.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/slick.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/slick.min.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <link rel="stylesheet" href="assets/css/animate.min.css" />
+    <script src="assets/js/wow.min.js"></script>
+
+</head>
+
+
+
+<body>
+
+    <!--offcanvas-->
+
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel"><img src="assets/images/logo.png" alt="logo" /></h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form method="post">
+                <input type="text" name="name_field" placeholder="Name" required="">
+                <input type="number" name="your-phone" placeholder="Phone" required="">
+                <input type="email" name="email_field" placeholder="Email" required="">
+                <textarea name="message_field" placeholder="Message"></textarea>
+                <input type="submit" name="submit" value="Send Message">
+            </form>
+        </div>
+    </div>
+
+    <!--offcanvas-mobile -->
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptionsmobile" aria-labelledby="offcanvasWithBothOptionsLabelmobile">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabelmobile"><img src="assets/images/logo.png" alt="logo" /></h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="service.html">Services</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href=""><i class="fa-solid fa-phone"></i> +91 88888 88888</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <!--button-->
+    <a id="button"><i class="fa-solid fa-arrow-up"></i></a>
+
+
+    <!--header  -->
+
+
+
+
+
+    <header>
+        <div class="container">
+            <div class="row align-items-center">
+
+                <div class="col-lg-3">
+                    <div class="logo">
+                        <a href="index.html" style="font-weight: 900;font-size: 30px;">Plumbing</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="menubar">
+                        <ul class="d-flex align-items-center justify-content-center">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="service.html">Services</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="head-btn">
+                        <ul class="d-flex align-items-center justify-content-end">
+                            <li><a href="">supportteam@gmail.com <i class="fa-regular fa-envelope"></i></a></li>
+                            <li class="" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+                                <a href="#"></a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                    <div class="header-nav">
+                        <a href="javascript:void(0)" class="mobnav-icon" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptionsmobile" aria-controls="offcanvasWithBothOptions">
+                            <div class="mobicon-line top-line"></div>
+                            <div class="mobicon-line mid-line"></div>
+                            <div class="mobicon-line bot-line"></div>
+                        </a>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </header>
+    <!--Products-->
+    <div class="Products" id="products">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 wow animate__fadeInLeft" data-wow-offset="180" data-wow-duration="1s">
+                    <figure><img src="assets/images/service-1.jpg" alt="service" />
+
+                        <div class="Products-content" id="services">
+                            <h2>Water Leak Detection Technology</h2>
+                            <p>Using advanced technology to detect hidden leaks and prevent water damage.</p>
+                        </div>
+                    </figure>
+                </div>
+
+                <div class="col-lg-4 wow animate__fadeInRight" data-wow-offset="180" data-wow-duration="1s">
+                    <figure class="mb-4"><img src="assets/images/service-2.jpg" alt="service" />
+                        <div class="Products-content">
+                            <h3>Pipe Installation and Replacement</h3>
+                            <p>Installing new pipes or replacing old ones to improve water flow and system efficiency.</p>
+                        </div>
+                    </figure>
+                    <figure><img src="assets/images/service-4.jpg" alt="service" />
+                        <div class="Products-content">
+                            <h3>Regular Maintenance Services</h3>
+                            <p>Offering routine maintenance to keep plumbing systems in optimal condition and prevent future issues</p>
+                        </div>
+                    </figure>
+                </div>
+
+                <div class="col-lg-4 wow animate__fadeInRight" data-wow-offset="180" data-wow-duration="1s">
+                    <figure class="mb-4"><img src="assets/images/service-3.jpg" alt="service" />
+                        <div class="Products-content">
+                            <h3>Water Filtration Systems</h3>
+                            <p>Installing and maintaining water purification systems for clean, safe drinking water</p>
+                        </div>
+                    </figure>
+                    <figure><img src="assets/images/service-5.jpg" alt="service" />
+                        <div class="Products-content">
+                            <h3>Gas Line Services</h3>
+                            <p>Installing, repairing, and inspecting gas lines for safety and proper function</p>
+                        </div>
+                    </figure>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--footer-->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <h3>QUICK LINKS</h3>
+                    <ul class="footer-menu">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4">
+                    <h3>EMAIL ADDRESS</h3>
+                    <div class="footer-info">
+                        <a href="mailto:support@psaipl.com">support@psaipl.com</a>
+                        <h4>Phone Number</h4>
+                        <p class="mb-2"><i class="fa-solid fa-phone"></i><a href="">+91 88888 88888</a></p>
+                        <p><i class="fa-brands fa-whatsapp"></i><a href="">+91 88888 88888</a></p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <h3>OUR LOCATIONS</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248755.79476744833!2d80.0442026244524!3d13.047807806331651!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5265ea4f7d3361%3A0x6e61a70b6863d433!2sChennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1699537634532!5m2!1sen!2sin"
+                        style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+
+            </div>
+        </div>
+
+
+        <div class="copyright">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-4">
+                        <div class="logo">
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <p>Copyright © 2023 Plumbing Private Limited, All Rights Reserved</p>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="smoicons">
+                            <ul class="d-flex align-items-center justify-content-end">
+                                <li><a href="#" target="_blank"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                <li><a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+                                <li><a href="#" target="_blank"><i class="fa-brands fa-x-twitter"></i></a></li>
+                                <li><a href="#" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </footer>
+
+
+
+    <script type="text/javascript">
+        new WOW().init();
+
+        $(document).ready(function() {
+            $(".mobnav-icon").click(function() {
+                $(".mobile-menu").fadeToggle(500);
+                $(".top-line").toggleClass("top-animate");
+                $(".mid-line").toggleClass("mid-animate");
+                $(".bot-line").toggleClass("bottom-animate");
+            });
+        });
+
+        $('.testimonialslider').slick({
+            arrows: true,
+            infinite: true,
+            speed: 300,
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            nextArrow: '<i class="fa-solid fa-chevron-right"></i>',
+            prevArrow: '<i class="fa-solid fa-chevron-left"></i>',
+            responsive: [{
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
+                    infinite: true,
+                }
+            }, {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            }, {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }]
+        });
+
+
+        var btn = $('#button');
+
+        $(window).scroll(function() {
+            if ($(window).scrollTop() > 300) {
+                btn.addClass('show');
+            } else {
+                btn.removeClass('show');
+            }
+        });
+
+        btn.on('click', function(e) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: 0
+            }, '300');
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
