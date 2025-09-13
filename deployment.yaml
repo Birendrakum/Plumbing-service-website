@@ -1,0 +1,21 @@
+apiVersion: webapp:1.0
+kind: Deployemnt
+metadata:
+  name: WebApp-deploy
+  labels:
+    app: webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+        - name: webapp
+          image: logn31/webapp:latest
+          ports:
+          - containerPort: 80

@@ -1,0 +1,14 @@
+apiVersion: 1.0
+kind: Service
+metadata:
+  name: web-service-LB
+  labels:
+    app: LB-webapp
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: webapp
+
