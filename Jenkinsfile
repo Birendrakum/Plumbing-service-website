@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        terraform 'Terraform_1.6'
+    }
 
     stages {
         stage('Run Script') {
