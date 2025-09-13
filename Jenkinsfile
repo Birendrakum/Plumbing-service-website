@@ -5,13 +5,14 @@ pipeline {
         stage('Run Script') {
             steps {
                 echo 'Executing single-stage pipeline...'
-                sh 'echo "Test5 "'
+                sh 'echo "Test6 "'
             }
         }
 
         stage('Initializing terraform') {
             steps{
                 echo 'Initializing terraform'
+                sh 'cd EKS'
                 sh "terraform init"
             }
         }
