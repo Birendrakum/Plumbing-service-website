@@ -8,7 +8,7 @@ pipeline {
         stage('Run Script') {
             steps {
                 echo 'Executing single-stage pipeline...'
-                sh 'echo "Test11 "'
+                sh 'echo "Test12 "'
             }
         }
 
