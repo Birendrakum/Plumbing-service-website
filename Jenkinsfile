@@ -5,7 +5,7 @@ pipeline {
         stage('Run Script') {
             steps {
                 echo 'Executing single-stage pipeline...'
-                sh 'echo "Test2 "'
+                sh 'echo "Test3 "'
             }
         }
     }
