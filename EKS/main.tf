@@ -30,7 +30,7 @@ module "eks" {
   cluster_endpoint_public_access = true
 
   eks_managed_node_groups = {
-    default {
+    default = {
       desired_capacity = 2
       max_capacity = 3
       min_capacity = 1
