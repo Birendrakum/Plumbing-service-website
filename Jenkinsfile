@@ -8,14 +8,14 @@ pipeline {
         stage('Run Script') {
             steps {
                 echo 'Executing single-stage pipeline...'
-                sh 'echo "Test15 "'
+                sh 'echo "Test16 "'
             }
         }
 
         stage('Initializing terraform') {
             steps{
                 echo 'Initializing terraform'
-                sh 'cd EKS && terraform init'
+                sh 'cd EKS && terraform init -upgrade'
             }
         }
 
