@@ -8,21 +8,21 @@ pipeline {
         stage('Run Script') {
             steps {
                 echo 'Executing single-stage pipeline...'
-                sh 'echo "Test9 "'
+                sh 'echo "Test10 "'
             }
         }
 
         stage('Initializing terraform') {
             steps{
                 echo 'Initializing terraform'
-                sh 'cd EKS & terraform init'
+                sh 'cd EKS && terraform init'
             }
         }
 
         stage('Applying terraform'){
             steps {
             echo 'Applying terraform code'
-            sh 'cd EKS & terraform apply -auto-approve'
+            sh 'cd EKS && terraform apply -auto-approve'
             }
         }
     }
