@@ -10,15 +10,24 @@ pipeline {
         }
 
         stage('Initializing terraform') {
-            sh "terraform init"
+            steps{
+                echo 'Initializing terraform'
+                sh "terraform init"
+            }
         }
 
         stage('Destroying old cluster'){
-            sh 'terraform destroy'
+            steps{
+                echo 'Destroying old cluster'
+                sh 'terraform destroy'
+          }
         }
 
         stage('Applying terraform'){
+            steps {
+            echo 'Applying terraform code'
             sh 'terraform apply -auto-approve'
+            }
         }
     }
 }
