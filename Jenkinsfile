@@ -30,12 +30,15 @@ pipeline {
         }
 
         stage('Docker Login'){
-           sh  'docker login -u ${DOCKER_CRED_USR} --password-stdin'
+            steps{
+              sh  'docker login -u ${DOCKER_CRED_USR} --password-stdin'
+        }
         }
 
         stage('Docker image building and pushing to dockerhub'){
-            sh 'docker build -t logn31/Plumbing-web:latest | docker push logn31/Plumbing-web:latest'
-
+            steps{
+                sh 'docker build -t logn31/Plumbing-web:latest | docker push logn31/Plumbing-web:latest'
+            }
         }
     }
 }
