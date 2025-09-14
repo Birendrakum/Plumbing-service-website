@@ -31,7 +31,7 @@ pipeline {
 
         stage('Docker Login'){
             steps{
-              sh  'docker login -u ${DOCKER_CRED_USR} --password-stdin'
+              sh  'echo "${DOCKER_CRED_PSW}" | docker login -u ${DOCKER_CRED_USR} --password-stdin'
         }
         }
 
