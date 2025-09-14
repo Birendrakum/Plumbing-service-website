@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Run Script') {
             steps {
-                echo 'Executing single-stage pipeline...'
+                echo 'Executing single-stage pipeline test'
                 sh 'echo "Test16 && curl http://169.254.169.254/latest/meta-data/iam/security-credentials/"'
                 sh 'aws sts get-caller-identity'
             }
