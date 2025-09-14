@@ -5,7 +5,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_CRED = credentials('Jenkins/Docker-cred')
+        DOCKER_CRED = credentials('Docker-cred')
     }
 
     stages {
@@ -31,7 +31,7 @@ pipeline {
 
         stage('Docker Login'){
             steps{
-              sh  'echo "${DOCKER_CRED_PSW}" '
+              sh  'echo "${DOCKER_CRED_PSW}" | docker login -u ${DOCKER_CRED_USR} --password-stdin'
         }
         }
 
