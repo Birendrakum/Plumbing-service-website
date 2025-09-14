@@ -4,12 +4,14 @@ pipeline {
         terraform 'Terraform'
     }
 
+    environment {
+        DOCKER_CRED = credentials('Jenkins/Docker-cred')
+    }
+
     stages {
         stage('Run Script') {
             steps {
                 echo 'Executing single-stage pipeline test'
-                sh 'echo "Test27" && curl http://169.254.169.254/latest/meta-data/iam/security-credentials/'
-                sh 'aws sts get-caller-identity'
             }
         }
 
@@ -25,6 +27,15 @@ pipeline {
             echo 'Applying terraform code'
             sh 'cd EKS && terraform apply -auto-approve'
             }
+        }
+
+        stage('Docker Login'){
+           sh  'docker login -u ${DOCKER_CRED_USR} --password-stdin'
+        }
+
+        stage('Docker image building and pushing to dockerhub'){
+            sh 'docker build -t logn31/Plumbing-web:latest | docker push logn31/Plumbing-web:latest'
+
         }
     }
 }
