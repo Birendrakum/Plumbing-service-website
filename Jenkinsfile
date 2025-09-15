@@ -31,15 +31,10 @@ pipeline {
 
         stage('Docker Login'){
             steps{
-                script {
-                    def cred = readJSON text: "${DOCKER_CRED}"
-                    def user = cred.username
-                    def pass = cred.password
-                    sh '''echo "Username: ${user}" > debug.txt
-                           echo "Password: ${pass}" >> debug.txt '''
-                    sh  'echo "${pass}" | docker login -u ${user} --password-stdin'
+                    sh '''echo "Username: ${DOCKER_CRED_USR}" > debug.txt
+                           echo "Password: ${DOCKER_CRED_PSW}" >> debug.txt '''
+                    sh  'echo "${DOCKER_CRED_PSW}" | docker login -u ${DOCKER_CRED_USR} --password-stdin'
                 }
-        }
         }
 
         stage('Docker image building and pushing to dockerhub'){
