@@ -39,7 +39,7 @@ pipeline {
 
         stage('Docker image building and pushing to dockerhub'){
             steps{
-                sh 'docker build -t logn31/plumbing-web:latest . | docker push logn31/plumbing-web:latest'
+                sh 'docker build -t logn31/plumbing-web:latest . && docker push logn31/plumbing-web:latest'
             }
         }
     }
