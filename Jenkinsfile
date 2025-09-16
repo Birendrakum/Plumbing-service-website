@@ -5,13 +5,51 @@ pipeline {
     }
 
     environment {
+        SCANNER_HOME = tool 'sonar-scanner'
         DOCKER_CRED = credentials('Docker-cred')
+        EKS_CLUSTER_NAME = 'PlumbingSite-EKS-Cluster'
+        AWS_REGION = 'us-east-1'
+        EMAIL_RECIPIENT = 'birendrakum.119@gmail.com'
+        EMAIL_SENDER = 'birendrakum.119@gmail.com'
     }
 
     stages {
-        stage('Run Script') {
+        stage('Clean Workspace') {
             steps {
-                echo 'Executing single-stage pipeline test'
+                cleanWs()
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' 
+                    $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=BMS \
+                        -Dsonar.projectKey=BMS
+                    '''
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
+                }
+            }
+        }
+
+        stage('OWASP FS Scan') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+
+        stage('Trivy FS Scan') {
+            steps {
+                sh 'trivy fs . > trivyfs.txt'
             }
         }
 
@@ -42,5 +80,46 @@ pipeline {
                 sh 'docker build -t logn31/plumbing-web:latest . && docker push logn31/plumbing-web:latest'
             }
         }
+
+        stage('Deploy to EKS Cluster') {
+            steps {
+                script {
+                    sh '''
+                    echo "Verifying AWS credentials..."
+                    aws sts get-caller-identity
+
+                    echo "Configuring kubectl for EKS cluster..."
+                    aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+
+                    echo "Verifying kubeconfig..."
+                    kubectl config view
+
+                    echo "Deploying application to EKS..."
+                    kubectl apply -f deployment.yml
+                    kubectl apply -f service.yml
+
+                    echo "Verifying deployment..."
+                    kubectl get pods
+                    kubectl get svc
+                    '''
+                }
+            }
+        }
+
+        stage('Notify') {
+                    steps {
+                        withCredentials([string(credentialsId: 'email-token', variable: 'EMAIL_TOKEN')]) {
+                            sh '''
+                                echo "Sending email using token: $EMAIL_TOKEN"
+                                curl -s --url 'smtps://smtp.gmail.com:465' \
+                                --ssl-reqd \
+                                --mail-from '$EMAIL_SENDER' \
+                                --mail-rcpt "$EMAIL_RECIPIENT" \
+                                --upload-file <(echo -e "Subject: Jenkins Build Notification\n\nBuild completed.") \
+                                --user '$EMAIL_SENDER:$EMAIL_TOKEN'
+                            '''
+                        }
+                    }
+                }
     }
 }

@@ -1,0 +1,282 @@
+# Plumbing-service-website
+
+Launch ec2 of size t3.large with 30 gb storage and attach Role to perform all the tasks related to  AWS.
+
+Install jenkins on ec2:
+=================================================================================================
+create a script: vi jenkins.sh
+give executable permission: chmod +x jenkins.sh
+
+#!/bin/bash
+
+# Install OpenJDK 17 JRE Headless
+sudo apt install openjdk-17-jre-headless -y
+
+# Download Jenkins GPG key
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+
+# Add Jenkins repository to package manager sources
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+# Update package manager repositories
+sudo apt-get update
+
+# Install Jenkins
+sudo apt-get install jenkins -y
+======================================================================================================
+
+Install Docker
+======================================================================================================
+create a sh file and give executable permission to it.
+
+#!/bin/bash
+
+# Update package manager repositories
+sudo apt-get update
+
+# Install necessary dependencies
+sudo apt-get install -y ca-certificates curl
+
+# Create directory for Docker GPG key
+sudo install -m 0755 -d /etc/apt/keyrings
+
+# Download Docker's GPG key
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+
+# Ensure proper permissions for the key
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add Docker repository to Apt sources
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Update package manager repositories
+sudo apt-get update
+
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 
+
+Add jenkins user to docker group
+===============================================================================================================
+sudo usermod -aG docker jenkins
+
+
+Install sonarqube
+================================================================
+
+Run the below command to install sonarqube inside docker
+
+docker run -d --name sonarqube -p 9000:9000 sonarqube
+
+
+Install Trivy
+======================================================================================================
+#!/bin/bash
+sudo apt-get install wget apt-transport-https gnupg
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+sudo apt-get update
+sudo apt-get install trivy
+
+
+Install plugins in jenkins
+======================================================================================================
+
+Go to <ec2-ip-address>:8080 and paste the secret from file mentioned in /var/lib/jenkins/secrets/initialAdminPassword
+
+Install the below plugins:
+Pipeline stage view 
+Eclipse termurin
+All docker plugins
+All K8s plugins
+Sonarqube scanner
+All terraform plugins
+Owasp Dependency-check
+config file provider
+Promethemus metrics
+AWS secret manager
+Email extension 
+
+Create Sonarqube token and store in aws secret manager
+========================================================================================
+Login to sonarqube server <ec2-ip>:9000 with user and password: admin and admin
+
+Go to adminstration.
+Click on security, then user
+U will see a token column and below it shows how many tokens are there. Next to that number, click on four dots and generate new token
+
+Login to AWS console and go to secret manager
+create a secret with plain text and paste the token
+tag the secret with:
+jenkins:credentials:type=string
+
+
+Store dockerHub credentials in AWS secret manager
+==================================================================================================
+
+Store the password in plaintext and tag the secret with:
+jenkins:credentials:type=userPassword
+jenkins:credentials:username=<Ur-username>
+
+Add ur email credentials in AWS secret manager
+=============================================================================================
+First go to your gmail account management.
+click on security and verify you have 2 step verification.
+After that search for apppassword in searchbar and generate a password.
+Copy the password, remove white spaces and store it in secret manager under plaintext with tag:
+jenkins:credentials:type=string
+
+
+
+Sonarqube Webhook (It will tell sonarqube where jenkins is running)
+========================================================================================================
+Under Adminstration, go to configuration and then select webhook and create new webhook
+Give jenkins urls: <url>:8080/sonarqube-webhook/
+
+
+Install jenkins tools
+==================================================================================================
+Go to manage jenkins and then go to tools.
+
+Under sonarqube scanner installation, click on add sonarqube scanner
+Give name for scanner tool(This name is important and we will use it in pipeline)
+Select latest version
+
+Go to Dependency-check and click on add
+Give name to tool (This name is important and we will use it in pipeline)
+click on Install auto and add installer: from github
+
+Go to docker tool, name it and install from dockerhub
+
+Go to terraform tool, name it and install from bintray
+
+
+Configure jenkins system
+===============================================================================================
+
+Go to sonarqube server and click on add sonarqube
+Give name to server (This name is important and we will use it in pipeline)
+Add sonarqube server URL and select token from aws, then apply and save.
+
+
+Launch one instance for prometheus and grafana
+============================================================================================================
+
+//////////// Configuring Prometheus ////////////////////////
+
+Adding prometheus user:
+sudo useradd --system --no-create-home -shell /bin/false prometheus
+
+Download and configure prometheus
+sudo wget https://github.com/prometheus/prometheus/releases/download/v2.47.1/prometheus-2.47.1.linux-amd64.tar.gz
+tar -xvf prometheus-2.47.1.linux-amd64.tar.gz
+sudo mkdir -p /data /etc/prometheus
+cd prometheus-2.47.1.linux-amd64/
+sudo mv prometheus promtool /usr/local/bin/ (Moving binaries to /usr/local/bin)
+sudo mv consoles/ console_libraries/ /etc/prometheus/ (Move the console/ console_libraries/ to prometheus configurations directory)
+sudo mv consoles/ console_libraries/ /etc/prometheus/ (Move the console libraries to prometheus configuraton directory)
+sudo mv prometheus.yml /etc/prometheus/prometheus.yml (Move the example of the main Prometheus configuration file)
+sudo chown -R prometheus:prometheus /etc/prometheus/ /data/ (Adding the directory to prometheus group and setting ownership to prometheus)
+prometheus --version (to see prometheus is configured successfully)
+We have to manually configure systemd because we have not installed prometheus with default pacakge manager.
+vi /etc/systemd/system/prometheus
+[Unit]
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=500
+StartLimitBurst=5
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+Restart=on-failure
+RestartSec=5s
+ExecStart=/usr/local/bin/prometheus \
+  --config.file=/etc/prometheus/prometheus.yml \
+  --storage.tsdb.path=/data \
+  --web.console.templates=/etc/prometheus/consoles \
+  --web.console.libraries=/etc/prometheus/console_libraries \
+  --web.listen-address=0.0.0.0:9090 \
+  --web.enable-lifecycle
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl enable prometheus (Start the prometheus automatically after restart)
+sudo systemctl start prometheus
+
+You can access prometheus using <ec2-ip>:9090
+
+Install Node Exporter ( Do in your monitoring server)
+Go to ~ path
+sudo useradd --system --no-create-home --shell /bin/false node_exporter
+wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
+tar -xvf node_exporter-1.6.1.linux-amd64.tar.gz
+sudo mv node_exporter-1.6.1.linux-amd64/node_exporter /usr/local/bin/
+rm -rf node_exporter*
+
+Manually configure Node exporter in systemd
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+StartLimitIntervalSec=500
+StartLimitBurst=5
+
+[Service]
+User=node_exporter
+Group=node_exporter
+Type=simple
+Restart=on-failure
+RestartSec=5s
+ExecStart=/usr/local/bin/node_exporter --collector.logind
+
+[Install]
+WantedBy=multi-user.target
+
+Enable and start Node Exporter:
+sudo systemctl enable node_exporter
+sudo systemctl start node_exporter
+sudo systemctl status node_exporter
+
+After that we need to configure job inside prometheus.yaml file so that it can fetch metrics
+open /etc/prometheus/prometheus.yaml
+
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['<MonitoringVMip>:9100']
+
+  - job_name: 'jenkins'
+    metrics_path: '/prometheus'
+    static_configs:
+      - targets: ['<your-jenkins-ip>:<your-jenkins-port>']
+
+Check configuration is correct or not:
+promtool check config /etc/prometheus/prometheus.yml
+
+
+//////////////////// Configuring Graffana ////////////////////
+
+sudo apt-get update
+sudo apt-get install -y apt-transport-https software-properties-common
+wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
+echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+sudo apt-get update
+sudo apt-get -y install grafana
+sudo systemctl enable grafana-server
+sudo systemctl start grafana-server
+
+Access graffana using <ec2-ip>:3000, log using user:admin and password:admin
+
+Link prometheus and Graffana:
+click on data source, select prometheus.
+Give prometheus server URL.
+
+Add dashboard:
+Click on Dashboard, Then go to import Dashboard.
+Access this link and copy the dashboard ID. ( URL: https://grafana.com/grafana/dashboards/1860-node-exporter-full/ )
+Similarily do it for jenkins dashboard using url: URL: https://grafana.com/grafana/dashboards/9964-jenkins-performance-and-health-overview/
